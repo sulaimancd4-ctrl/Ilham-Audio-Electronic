@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<title>ILHAM AUDIO — Pembuat Surat Penawaran</title>
+<style>
+:root{--ink:#111;--line:#aab1ba;--head:#e9edf2;--muted:#555}
+*{box-sizing:border-box}
+body{margin:0;background:#f1f2f4;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.app{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:#555;margin:0 0 18px;font-size:14px}
+.panel{background:white;border:1px solid #ddd;border-radius:12px;padding:16px;margin-bottom:16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}
+input,select{width:100%;font:inherit;color:#111;border:1px solid #bbb;border-radius:7px;padding:10px;background:#fff;min-width:0}
+button{border:1px solid #222;border-radius:8px;background:#111;color:#fff;padding:11px 14px;font-weight:700;font-size:14px;cursor:pointer}
+button.secondary{background:#fff;color:#111}
+button.danger{background:#fff;color:#8b1111;border-color:#c99}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.items{display:grid;gap:10px}
+.item{border:1px solid #ddd;border-radius:9px;padding:12px}
+.itemtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-weight:700}
+.itemgrid{display:grid;grid-template-columns:minmax(140px,2fr) minmax(70px,.7fr) minmax(90px,.8fr) minmax(120px,1fr);gap:8px}
+.totalbox{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#f7f7f7;border:1px solid #ddd;padding:14px;border-radius:9px;margin-top:12px}
+.totalbox strong{font-size:21px}
+.small{font-size:12px;color:#555;line-height:1.5}
+.preview-wrap{overflow:auto;background:#ddd;padding:12px;border-radius:8px}
+#letter{background:#fff;color:#000;width:794px;min-height:1123px;margin:0 auto;padding:42px 38px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 2px 12px #0001}
+.letterhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid #222;padding-bottom:12px}
+.brand{font-size:36px;font-weight:800;letter-spacing:.3px;white-space:nowrap}
+.bank{text-align:right;font-size:16px;line-height:1.4;white-space:nowrap}
+.bank strong{font-size:20px}
+.date{text-align:right;margin:22px 0 24px;font-size:17px}
+.to{font-size:16px;line-height:1.4;margin-bottom:24px}
+.customer{font-size:19px;font-weight:700}
+.salutation{font-size:16px;margin-bottom:3px}
+.intro{font-size:16px;line-height:1.55;margin:0 0 32px;text-align:justify}
+.table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px}
+.table th,.table td{border:1px solid #8e969f;padding:10px 8px;vertical-align:middle;overflow-wrap:anywhere}
+.table th{background:var(--head);font-weight:700;text-align:center}
+.table td:nth-child(1),.table td:nth-child(3){text-align:center}
+.table td:nth-child(4),.table td:nth-child(5){text-align:right;white-space:nowrap}
+.table .name{text-align:left}
+.table .grand td{background:var(--head);font-weight:700}
+.table .grand td:last-child{text-align:right}
+.closing{font-size:15px;line-height:1.55;margin-top:32px}
+.signoff{margin-top:32px;font-size:15px}
+.signature{font-size:18px;font-weight:800;margin-top:48px}
+#status{font-size:13px;color:#444;margin-top:8px}
+@media(max-width:650px){
+ .app{padding:10px}.fields{grid-template-columns:1fr}.itemgrid{grid-template-columns:1fr 1fr}.itemgrid .wide{grid-column:1/-1}
+ .totalbox{align-items:flex-start;flex-direction:column}
+ #letter{margin:0;width:794px}
+}
+@media print{body{background:#fff}.app>*:not(.preview-section){display:none!important}.preview-wrap{padding:0;background:#fff}#letter{box-shadow:none;margin:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>ILHAM AUDIO</h1>
+  <p class="sub">Pembuat surat penawaran • hitung otomatis • ekspor PNG</p>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 12px">Data surat</h2>
+    <div class="fields">
+      <div><label for="date">Tanggal</label><input id="date" type="date" value="2026-10-16"></div>
+      <div><label for="customer">Pelanggan</label><input id="customer" value="Pelanggan Umum"></div>
+    </div>
+    <p class="small" style="margin:10px 0 0">Kop dan detail BCA mengikuti desain referensi. Semua tulisan hitam, latar putih polos, tabel bergaris tipis dengan header abu-abu muda.</p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 12px">Daftar barang</h2>
+    <div id="items" class="items"></div>
+    <div class="actions">
+      <button class="secondary" id="add">＋ Tambah barang</button>
+      <button class="secondary" id="clear">Kosongkan daftar</button>
+      <button class="secondary" id="sample">Muat contoh barang</button>
+    </div>
+    <div class="fields" style="margin-top:14px">
+      <div><label for="discount">Potongan harga (Rp)</label><input id="discount" type="number" min="0" step="1" value="0"></div>
+      <div><label for="override">Total akhir manual (opsional)</label><input id="override" type="number" min="0" step="1" placeholder="Kosongkan agar dihitung otomatis"></div>
+    </div>
+    <div class="totalbox"><span>Subtotal: <b id="subtotal">Rp 0</b><br><span class="small">Total akhir otomatis, kecuali jika total manual diisi.</span></span><strong id="finalTotal">Rp 0</strong></div>
+    <div class="actions">
+      <button id="export">Unduh surat sebagai PNG</button>
+      <button class="secondary" id="save">Simpan data di perangkat</button>
+      <button class="secondary" id="load">Muat data tersimpan</button>
+    </div>
+    <div id="status" role="status"></div>
+  </section>
+
+  <section class="panel preview-section">
+    <h2 style="font-size:18px;margin:0 0 12px">Pratinjau surat</h2>
+    <div class="preview-wrap">
+      <article id="letter">
+        <div class="letterhead">
+          <div class="brand">ILHAM AUDIO</div>
+          <div class="bank"><strong>BCA 2430181711</strong><br>a/n ILHAM NUR HIDAYATULLOH</div>
+        </div>
+        <div class="date" id="pDate"></div>
+        <div class="to">Kepada,<br><span class="customer" id="pCustomer">Pelanggan Umum</span></div>
+        <div class="salutation">Dengan hormat,</div>
+        <p class="intro">Sehubungan dengan kebutuhan peralatan audio untuk kegiatan yang Bapak/Ibu rencanakan, bersama ini kami dari <b>ILHAM AUDIO</b> menawarkan produk-produk unggulan dengan kualitas terbaik dan harga yang kompetitif sebagai berikut:</p>
+        <table class="table">
+          <colgroup><col style="width:8%"><col style="width:35%"><col style="width:13%"><col style="width:22%"><col style="width:22%"></colgroup>
+          <thead><tr><th>No</th><th>Nama Barang</th><th>Jumlah</th><th>Harga Satuan</th><th>Total Harga</th></tr></thead>
+          <tbody id="pRows"></tbody>
+          <tfoot><tr class="grand"><td colspan="4" style="text-align:right">Total Harga</td><td id="pFinal"></td></tr></tfoot>
+        </table>
+        <div class="closing">Demikian penawaran ini kami sampaikan. Besar harapan kami dapat bekerja sama dengan baik. Atas perhatian dan kepercayaannya, kami ucapkan terima kasih.</div>
+        <div class="signoff">Hormat kami,</div>
+        <div class="signature">ILHAM AUDIO</div>
+      </article>
+    </div>
+  </section>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(Number(n)||0).toLocaleString('id-ID');
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let data = [{nama:'',qty:'1',unit:'pcs',price:''}];
+
+function renderInputs(){
+  $('items').innerHTML = '';
+  data.forEach((x,i)=>{
+    const div=document.createElement('div'); div.className='item';
+    div.innerHTML=`<div class="itemtop"><span>Barang ${i+1}</span><button type="button" class="danger" data-remove="${i}">Hapus</button></div>
+      <div class="itemgrid">
+      <div class="wide"><label>Nama barang</label><input data-i="${i}" data-k="nama" value="${escapeHtml(x.nama)}" placeholder="Contoh: Mixer Fest 8CH"></div>
+      <div><label>Jumlah</label><input data-i="${i}" data-k="qty" type="number" min="0" step="any" value="${escapeHtml(x.qty)}"></div>
+      <div><label>Satuan</label><select data-i="${i}" data-k="unit">
+      ${['pcs','roll','paket','unit','set','meter','buah'].map(u=>`<option ${x.unit===u?'selected':''} value="${u}">${u}</option>`).join('')}
+      </select></div>
+      <div class="wide"><label>Harga satuan (Rp)</label><input data-i="${i}" data-k="price" type="number" min="0" step="1" value="${escapeHtml(x.price)}" placeholder="Masukkan harga satuan"></div>
+      <div class="wide"><label>Total harga barang</label><input readonly value="${fmt((Number(x.qty)||0)*(Number(x.price)||0))}"></div>
+      </div>`;
+    $('items').appendChild(div);
+  });
+}
+function totals(){
+  const subtotal=data.reduce((s,x)=>s+(Number(x.qty)||0)*(Number(x.price)||0),0);
+  const discount=Math.max(0,Number($('discount').value)||0);
+  const manual=$('override').value.trim();
+  const final=Math.max(0,manual!==''?(Number(manual)||0):subtotal-discount);
+  $('subtotal').textContent=fmt(subtotal); $('finalTotal').textContent=fmt(final);
+  return {subtotal,discount,final};
+}
+function formatDate(s){
+  if(!s) return '';
+  const [y,m,d]=s.split('-').map(Number);
+  const months=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return `${d} ${months[m-1]} ${y}`;
+}
+function updatePreview(){
+  $('pDate').textContent=formatDate($('date').value);
+  $('pCustomer').textContent=$('customer').value||'Pelanggan Umum';
+  $('pRows').innerHTML='';
+  data.forEach((x,i)=>{
+    const tr=document.createElement('tr');
+    const total=(Number(x.qty)||0)*(Number(x.price)||0);
+    tr.innerHTML=`<td>${i+1}</td><td class="name">${escapeHtml(x.nama)}</td><td>${escapeHtml(x.qty)} ${escapeHtml(x.unit)}</td><td>${fmt(x.price)}</td><td>${fmt(total)}</td>`;
+    $('pRows').appendChild(tr);
+  });
+  $('pFinal').textContent=fmt(totals().final);
+  // Keep the total row aligned with the final item when there are few rows, matching the reference style.
+}
+function refresh(){renderInputs();updatePreview();}
+function updateItemRow(i){
+  const row = $('items').children[i];
+  if(!row) return;
+  const item = data[i];
+  const totalField = row.querySelector('input[readonly]');
+  if(totalField) totalField.value = fmt((Number(item.qty)||0)*(Number(item.price)||0));
+}
+$('items').addEventListener('input',e=>{
+  const el=e.target;
+  if(el.dataset.i===undefined) return;
+  const i=Number(el.dataset.i);
+  data[i][el.dataset.k]=el.value;
+  updateItemRow(i);
+  updatePreview();
+});
+$('items').addEventListener('change',e=>{
+  const el=e.target;
+  if(el.dataset.i===undefined) return;
+  const i=Number(el.dataset.i);
+  data[i][el.dataset.k]=el.value;
+  updateItemRow(i);
+  updatePreview();
+});
+$('items').addEventListener('click',e=>{
+  const b=e.target.closest('[data-remove]');if(!b)return;
+  data.splice(Number(b.dataset.remove),1);refresh();
+});
+$('add').onclick=()=>{data.push({nama:'',qty:'1',unit:'pcs',price:''});refresh();};
+$('clear').onclick=()=>{data=[];refresh();};
+$('sample').onclick=()=>{data=[
+{nama:'Mixer Fest 8CH',qty:'1',unit:'pcs',price:'2500000'},
+{nama:'Ampli TOA 2120',qty:'1',unit:'pcs',price:'3250000'},
+{nama:'Ampli TOA 2240',qty:'1',unit:'pcs',price:'4500000'},
+{nama:'Speaker Membran TOA',qty:'4',unit:'pcs',price:'1000000'},
+{nama:'Speaker TOA 1030',qty:'6',unit:'pcs',price:'950000'},
+{nama:'Kabel Speaker',qty:'1',unit:'roll',price:'1500000'},
+{nama:'Mic Adzan',qty:'1',unit:'pcs',price:'400000'},
+{nama:'Mic Podium',qty:'1',unit:'pcs',price:'500000'},
+{nama:'Mic Wireless PJH',qty:'1',unit:'pcs',price:'1250000'},
+{nama:'Pasang + Transport',qty:'1',unit:'paket',price:'4400000'}];$('override').value='28000000';$('discount').value='0';refresh();};
+['date','customer','discount','override'].forEach(id=>$(id).addEventListener('input',updatePreview));
+$('save').onclick=()=>{try{localStorage.setItem('ilhamAudioQuote',JSON.stringify({data,date:$('date').value,customer:$('customer').value,discount:$('discount').value,override:$('override').value}));$('status').textContent='Data tersimpan di browser perangkat ini.';}catch(e){$('status').textContent='Tidak bisa menyimpan data di browser ini.';}};
+$('load').onclick=()=>{try{const s=JSON.parse(localStorage.getItem('ilhamAudioQuote'));if(!s){$('status').textContent='Belum ada data tersimpan.';return;}data=s.data||[];$('date').value=s.date||'';$('customer').value=s.customer||'Pelanggan Umum';$('discount').value=s.discount||'0';$('override').value=s.override||'';refresh();$('status').textContent='Data tersimpan berhasil dimuat.';}catch(e){$('status').textContent='Gagal memuat data tersimpan.';}};
+$('export').onclick=async()=>{
+ const btn=$('export');btn.disabled=true;btn.textContent='Menyiapkan PNG…';
+ try{
+   if(!window.html2canvas){
+     await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=resolve;s.onerror=()=>reject(new Error('Tidak dapat memuat alat ekspor. Periksa koneksi internet.'));document.head.appendChild(s);});
+   }
+   const canvas=await html2canvas($('letter'),{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false});
+   canvas.toBlob(blob=>{
+     if(!blob){$('status').textContent='PNG gagal dibuat.';return;}
+     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='Surat-Penawaran-ILHAM-AUDIO.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+     $('status').textContent='PNG dibuat. Jika tidak langsung tersimpan, periksa folder Download.';
+   },'image/png');
+ }catch(e){$('status').textContent=e.message||'Ekspor PNG gagal.';}
+ finally{btn.disabled=false;btn.textContent='Unduh surat sebagai PNG';}
+};
+refresh();
+</script>
+<script>
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }
+</script>
+</body>
+</html>
