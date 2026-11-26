@@ -25,7 +25,7 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
 .items{display:grid;gap:10px}
 .item{border:1px solid #ddd;border-radius:9px;padding:12px}
 .itemtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-weight:700}
-.itemgrid{display:grid;grid-template-columns:minmax(140px,2fr) minmax(70px,.7fr) minmax(90px,.8fr) minmax(120px,1fr);gap:8px}
+.column-tools{display:grid;gap:8px}.column-row{display:grid;grid-template-columns:minmax(90px,1fr) 58px 78px 90px auto auto auto;gap:6px;align-items:center;border:1px solid #ddd;border-radius:8px;padding:8px}.column-row input,.column-row select{padding:8px;min-width:0}.itemgrid{display:grid;grid-template-columns:minmax(140px,2fr) minmax(70px,.7fr) minmax(90px,.8fr) minmax(120px,1fr);gap:8px}
 .totalbox{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#f7f7f7;border:1px solid #ddd;padding:14px;border-radius:9px;margin-top:12px}
 .totalbox strong{font-size:21px}
 .small{font-size:12px;color:#555;line-height:1.5}
@@ -33,27 +33,29 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
 #letter{background:#fff;color:#000;width:794px;min-height:1123px;margin:0 auto;padding:42px 38px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 2px 12px #0001}
 .letterhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid #222;padding-bottom:12px}
 .brand{font-size:36px;font-weight:800;letter-spacing:.3px;white-space:nowrap}
-.bank{text-align:right;font-size:16px;line-height:1.4;white-space:nowrap}
+.bank{text-align:right;font-size:15px;line-height:1.45;white-space:normal;max-width:48%;overflow-wrap:anywhere}.npwp-line{margin-bottom:2px}.account-line{margin-top:2px}
 .bank strong{font-size:20px}
 .date{text-align:right;margin:22px 0 24px;font-size:17px}
 .to{font-size:16px;line-height:1.4;margin-bottom:24px}
 .customer{font-size:19px;font-weight:700}
 .salutation{font-size:16px;margin-bottom:3px}
 .intro{font-size:16px;line-height:1.55;margin:0 0 32px;text-align:justify}
-.table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px}
-.table th,.table td{border:1px solid #8e969f;padding:10px 8px;vertical-align:middle;overflow-wrap:anywhere}
-.table th{background:var(--head);font-weight:700;text-align:center}
-.table td:nth-child(1),.table td:nth-child(3){text-align:center}
-.table td:nth-child(4),.table td:nth-child(5){text-align:right;white-space:nowrap}
+.table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+.table th,.table td{border:var(--grid-width,1px) var(--grid-style,solid) var(--grid-color,#8e969f);padding:8px 6px;vertical-align:middle;overflow-wrap:anywhere;word-break:normal;white-space:normal;line-height:1.3;min-width:0}
+.table th{hyphens:none;background:var(--head);font-weight:700;text-align:center}
+.table td{text-align:left}
+.table .grand td{padding:7px 8px;background:var(--head);font-weight:700;line-height:1.25}
+.table .grand-label{text-align:right!important;white-space:nowrap}
+.table .grand-value{text-align:right!important;white-space:nowrap}
+.table td.center{text-align:center}
+.table td.money{text-align:right;white-space:normal}
 .table .name{text-align:left}
-.table .grand td{background:var(--head);font-weight:700}
-.table .grand td:last-child{text-align:right}
 .closing{font-size:15px;line-height:1.55;margin-top:32px}
 .signoff{margin-top:32px;font-size:15px}
 .signature{font-size:18px;font-weight:800;margin-top:48px}
 #status{font-size:13px;color:#444;margin-top:8px}
 @media(max-width:650px){
- .app{padding:10px}.fields{grid-template-columns:1fr}.itemgrid{grid-template-columns:1fr 1fr}.itemgrid .wide{grid-column:1/-1}
+ .app{padding:10px}.fields{grid-template-columns:1fr}.itemgrid{grid-template-columns:1fr 1fr}.itemgrid .wide{grid-column:1/-1}.column-row{grid-template-columns:1fr 1fr}.column-row>*{min-width:0}
  .totalbox{align-items:flex-start;flex-direction:column}
  #letter{margin:0;width:794px}
 }
@@ -68,14 +70,33 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
   <section class="panel">
     <h2 style="font-size:18px;margin:0 0 12px">Data surat</h2>
     <div class="fields">
-      <div><label for="date">Tanggal</label><input id="date" type="date" value="2026-10-16"></div>
+      <div><label for="date">Tanggal</label><input id="date" type="date" value="2026-11-24"></div>
       <div><label for="customer">Pelanggan</label><input id="customer" value="Pelanggan Umum"></div>
+      <div><label for="brandName">Nama usaha / kop surat</label><input id="brandName" value="ILHAM AUDIO"></div>
+      <div><label for="npwp">NPWP</label><input id="npwp" value="" placeholder="Masukkan nomor NPWP"></div>
+      <div><label for="bankDetail">Bank dan nomor rekening</label><input id="bankDetail" value="BCA 2430181711"></div>
+      <div><label for="accountName">Nama pemilik rekening</label><input id="accountName" value="ILHAM NUR HIDAYATULLOH"></div>
     </div>
-    <p class="small" style="margin:10px 0 0">Kop dan detail BCA mengikuti desain referensi. Semua tulisan hitam, latar putih polos, tabel bergaris tipis dengan header abu-abu muda.</p>
+    <p class="small" style="margin:10px 0 0">Nama usaha, bank/nomor rekening, dan nama pemilik rekening bisa diedit. Perubahan langsung tampil pada pratinjau surat.</p>
   </section>
 
   <section class="panel">
     <h2 style="font-size:18px;margin:0 0 12px">Daftar barang</h2>
+    <details style="margin:0 0 12px;border:1px solid #ddd;border-radius:9px;padding:10px">
+      <summary style="font-weight:700;cursor:pointer">Atur kolom tabel (tambah, hapus, ubah nama, urutkan)</summary>
+      <p class="small">Kolom inti seperti Nama Barang, Jumlah, Harga Satuan, dan Total Harga terhubung dengan perhitungan. Kolom tambahan bisa diisi sendiri untuk setiap barang.</p>
+      <div id="columnTools" class="column-tools"></div>
+      <div class="actions"><button type="button" class="secondary" id="addColumn">＋ Tambah kolom</button></div>
+      <hr style="border:0;border-top:1px solid #ddd;margin:12px 0">
+      <strong style="font-size:13px">Pengaturan garis tabel</strong>
+      <div class="fields" style="margin-top:8px">
+        <div><label for="gridColor">Warna garis</label><input id="gridColor" type="color" value="#8e969f"></div>
+        <div><label for="gridWidth">Ketebalan garis</label><select id="gridWidth"><option value="1">Tipis</option><option value="1.5">Sedang</option><option value="2">Tebal</option></select></div>
+        <div><label for="gridStyle">Jenis garis</label><select id="gridStyle"><option value="solid">Utuh</option><option value="dashed">Putus-putus</option><option value="dotted">Titik-titik</option></select></div>
+        <div><label for="grandLabel">Tulisan total di bawah tabel</label><input id="grandLabel" value="Total Harga"></div>
+        <div><label for="grandAlign">Posisi tulisan total</label><select id="grandAlign"><option value="left">Kiri</option><option value="center">Tengah</option><option value="right" selected>Kanan</option></select></div>
+      </div>
+    </details>
     <div id="items" class="items"></div>
     <div class="actions">
       <button class="secondary" id="add">＋ Tambah barang</button>
@@ -83,10 +104,10 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
       <button class="secondary" id="sample">Muat contoh barang</button>
     </div>
     <div class="fields" style="margin-top:14px">
-      <div><label for="discount">Potongan harga (Rp)</label><input id="discount" type="number" min="0" step="1" value="0"></div>
+      <div><label for="discount">Diskon (Rp)</label><input id="discount" type="number" min="0" step="1" value="0"></div>
       <div><label for="override">Total akhir manual (opsional)</label><input id="override" type="number" min="0" step="1" placeholder="Kosongkan agar dihitung otomatis"></div>
     </div>
-    <div class="totalbox"><span>Subtotal: <b id="subtotal">Rp 0</b><br><span class="small">Total akhir otomatis, kecuali jika total manual diisi.</span></span><strong id="finalTotal">Rp 0</strong></div>
+    <div class="totalbox"><span>Harga sebelum diskon: <b id="subtotal">Rp 0</b><br><span class="small">Diskon dikurangkan dari harga. Total akhir otomatis, kecuali jika total manual diisi.</span></span><strong id="finalTotal">Rp 0</strong></div>
     <div class="actions">
       <button id="export">Unduh surat sebagai PNG</button>
       <button class="secondary" id="save">Simpan data di perangkat</button>
@@ -100,22 +121,26 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
     <div class="preview-wrap">
       <article id="letter">
         <div class="letterhead">
-          <div class="brand">ILHAM AUDIO</div>
-          <div class="bank"><strong>BCA 2430181711</strong><br>a/n ILHAM NUR HIDAYATULLOH</div>
+          <div class="brand" id="pBrand">ILHAM AUDIO</div>
+          <div class="bank">
+            <div class="npwp-line">NPWP: <span id="pNPWP"></span></div>
+            <div><strong id="pBank">BCA 2430181711</strong></div>
+            <div class="account-line">a/n <span id="pAccountName">ILHAM NUR HIDAYATULLOH</span></div>
+          </div>
         </div>
         <div class="date" id="pDate"></div>
         <div class="to">Kepada,<br><span class="customer" id="pCustomer">Pelanggan Umum</span></div>
         <div class="salutation">Dengan hormat,</div>
-        <p class="intro">Sehubungan dengan kebutuhan peralatan audio untuk kegiatan yang Bapak/Ibu rencanakan, bersama ini kami dari <b>ILHAM AUDIO</b> menawarkan produk-produk unggulan dengan kualitas terbaik dan harga yang kompetitif sebagai berikut:</p>
+        <p class="intro">Sehubungan dengan kebutuhan peralatan audio untuk kegiatan yang Bapak/Ibu rencanakan, bersama ini kami dari <b id="pBrandIntro">ILHAM AUDIO</b> menawarkan produk-produk unggulan dengan kualitas terbaik dan harga yang kompetitif sebagai berikut:</p>
         <table class="table">
-          <colgroup><col style="width:8%"><col style="width:35%"><col style="width:13%"><col style="width:22%"><col style="width:22%"></colgroup>
-          <thead><tr><th>No</th><th>Nama Barang</th><th>Jumlah</th><th>Harga Satuan</th><th>Total Harga</th></tr></thead>
+          <colgroup id="pColgroup"></colgroup>
+          <thead><tr id="pHead"></tr></thead>
           <tbody id="pRows"></tbody>
-          <tfoot><tr class="grand"><td colspan="4" style="text-align:right">Total Harga</td><td id="pFinal"></td></tr></tfoot>
+          <tfoot id="pFoot"></tfoot>
         </table>
         <div class="closing">Demikian penawaran ini kami sampaikan. Besar harapan kami dapat bekerja sama dengan baik. Atas perhatian dan kepercayaannya, kami ucapkan terima kasih.</div>
         <div class="signoff">Hormat kami,</div>
-        <div class="signature">ILHAM AUDIO</div>
+        <div class="signature" id="pSignature">ILHAM AUDIO</div>
       </article>
     </div>
   </section>
@@ -124,24 +149,48 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
 const $ = id => document.getElementById(id);
 const fmt = n => 'Rp ' + Math.round(Number(n)||0).toLocaleString('id-ID');
 const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let data = [{nama:'',qty:'1',unit:'pcs',price:''}];
-
+let columns = [
+ {id:'no',label:'No',kind:'system'}, {id:'nama',label:'Nama Barang',kind:'text'},
+ {id:'qty',label:'Jumlah',kind:'number'}, {id:'unit',label:'Satuan',kind:'unit'},
+ {id:'price',label:'Harga Satuan',kind:'number'}, {id:'total',label:'Total Harga',kind:'total'}
+];
+let nextColumnId=1;
+let data = [{nama:'',qty:'1',unit:'pcs',price:'',extra:{}}];
+const coreIds=['no','nama','qty','unit','price','total'];
+function renderColumnTools(){
+ $('columnTools').innerHTML='';
+ columns.forEach((c,i)=>{
+   const row=document.createElement('div');row.className='column-row';
+   row.innerHTML=`<input aria-label="Nama kolom" data-col-label="${c.id}" value="${escapeHtml(c.label)}">
+   <input aria-label="Lebar kolom persen" data-col-width="${c.id}" type="number" min="3" max="70" step="1" value="${c.width||({no:7,nama:29,qty:10,unit:10,price:20,total:24}[c.id]||12)}" title="Lebar kolom (%)">
+   <select aria-label="Posisi teks" data-col-align="${c.id}" title="Posisi teks">
+     <option value="left" ${(c.align||((c.id==='no'||c.id==='qty'||c.id==='unit')?'center':((c.id==='price'||c.id==='total')?'right':'left')))==='left'?'selected':''}>Kiri</option>
+     <option value="center" ${(c.align||((c.id==='no'||c.id==='qty'||c.id==='unit')?'center':((c.id==='price'||c.id==='total')?'right':'left')))==='center'?'selected':''}>Tengah</option>
+     <option value="right" ${(c.align||((c.id==='no'||c.id==='qty'||c.id==='unit')?'center':((c.id==='price'||c.id==='total')?'right':'left')))==='right'?'selected':''}>Kanan</option>
+   </select>
+   <select aria-label="Jenis kolom" data-col-kind="${c.id}" ${coreIds.includes(c.id)?'disabled':''}><option value="text" ${c.kind==='text'?'selected':''}>Teks</option><option value="number" ${c.kind==='number'?'selected':''}>Angka</option></select>
+   <button type="button" class="secondary" data-up="${i}" ${i===0?'disabled':''}>↑</button>
+   <button type="button" class="secondary" data-down="${i}" ${i===columns.length-1?'disabled':''}>↓</button>
+   <button type="button" class="danger" data-delcol="${c.id}">Hapus</button>`;
+   $('columnTools').appendChild(row);
+ });
+}
 function renderInputs(){
-  $('items').innerHTML = '';
-  data.forEach((x,i)=>{
-    const div=document.createElement('div'); div.className='item';
-    div.innerHTML=`<div class="itemtop"><span>Barang ${i+1}</span><button type="button" class="danger" data-remove="${i}">Hapus</button></div>
+ $('items').innerHTML='';
+ data.forEach((x,i)=>{
+   const div=document.createElement('div'); div.className='item';
+   const extraFields=columns.filter(c=>!coreIds.includes(c.id)).map(c=>`<div><label>${escapeHtml(c.label)}</label><input data-i="${i}" data-extra="${c.id}" type="${c.kind==='number'?'number':'text'}" value="${escapeHtml(x.extra?.[c.id]??'')}" placeholder="${c.kind==='number'?'Masukkan angka':'Isi '+escapeHtml(c.label)}"></div>`).join('');
+   div.innerHTML=`<div class="itemtop"><span>Barang ${i+1}</span><button type="button" class="danger" data-remove="${i}">Hapus</button></div>
       <div class="itemgrid">
-      <div class="wide"><label>Nama barang</label><input data-i="${i}" data-k="nama" value="${escapeHtml(x.nama)}" placeholder="Contoh: Mixer Fest 8CH"></div>
-      <div><label>Jumlah</label><input data-i="${i}" data-k="qty" type="number" min="0" step="any" value="${escapeHtml(x.qty)}"></div>
-      <div><label>Satuan</label><select data-i="${i}" data-k="unit">
-      ${['pcs','roll','paket','unit','set','meter','buah'].map(u=>`<option ${x.unit===u?'selected':''} value="${u}">${u}</option>`).join('')}
-      </select></div>
-      <div class="wide"><label>Harga satuan (Rp)</label><input data-i="${i}" data-k="price" type="number" min="0" step="1" value="${escapeHtml(x.price)}" placeholder="Masukkan harga satuan"></div>
-      <div class="wide"><label>Total harga barang</label><input readonly value="${fmt((Number(x.qty)||0)*(Number(x.price)||0))}"></div>
+      <div class="wide"><label>${escapeHtml(columns.find(c=>c.id==='nama')?.label||'Nama Barang')}</label><input data-i="${i}" data-k="nama" value="${escapeHtml(x.nama)}" placeholder="Contoh: Mixer Fest 8CH"></div>
+      <div><label>${escapeHtml(columns.find(c=>c.id==='qty')?.label||'Jumlah')}</label><input data-i="${i}" data-k="qty" type="number" min="0" step="any" value="${escapeHtml(x.qty)}"></div>
+      <div><label>${escapeHtml(columns.find(c=>c.id==='unit')?.label||'Satuan')}</label><select data-i="${i}" data-k="unit">${['pcs','roll','paket','unit','set','meter','buah'].map(u=>`<option ${x.unit===u?'selected':''} value="${u}">${u}</option>`).join('')}</select></div>
+      <div class="wide"><label>${escapeHtml(columns.find(c=>c.id==='price')?.label||'Harga Satuan')} (Rp)</label><input data-i="${i}" data-k="price" type="number" min="0" step="1" value="${escapeHtml(x.price)}" placeholder="Masukkan harga satuan"></div>
+      ${extraFields}
+      <div class="wide"><label>${escapeHtml(columns.find(c=>c.id==='total')?.label||'Total Harga Barang')}</label><input readonly value="${fmt((Number(x.qty)||0)*(Number(x.price)||0))}"></div>
       </div>`;
-    $('items').appendChild(div);
-  });
+   $('items').appendChild(div);
+ });
 }
 function totals(){
   const subtotal=data.reduce((s,x)=>s+(Number(x.qty)||0)*(Number(x.price)||0),0);
@@ -158,31 +207,67 @@ function formatDate(s){
   return `${d} ${months[m-1]} ${y}`;
 }
 function updatePreview(){
-  $('pDate').textContent=formatDate($('date').value);
-  $('pCustomer').textContent=$('customer').value||'Pelanggan Umum';
-  $('pRows').innerHTML='';
-  data.forEach((x,i)=>{
-    const tr=document.createElement('tr');
-    const total=(Number(x.qty)||0)*(Number(x.price)||0);
-    tr.innerHTML=`<td>${i+1}</td><td class="name">${escapeHtml(x.nama)}</td><td>${escapeHtml(x.qty)} ${escapeHtml(x.unit)}</td><td>${fmt(x.price)}</td><td>${fmt(total)}</td>`;
-    $('pRows').appendChild(tr);
-  });
-  $('pFinal').textContent=fmt(totals().final);
-  // Keep the total row aligned with the final item when there are few rows, matching the reference style.
+ $('pDate').textContent=formatDate($('date').value);
+ $('pCustomer').textContent=$('customer').value||'Pelanggan Umum';
+ $('pBrand').textContent=$('brandName').value||'';
+ $('pBrandIntro').textContent=$('brandName').value||'';
+ $('pSignature').textContent=$('brandName').value||'';
+ $('pNPWP').textContent=$('npwp').value||'';
+ $('pBank').textContent=$('bankDetail').value||'';
+ $('pAccountName').textContent=$('accountName').value||'';
+ const visible=columns;
+ const baseWidths={no:7,nama:29,qty:10,unit:10,price:20,total:24};
+ const weights=visible.map(c=>Number(c.width)||baseWidths[c.id]||12);
+ const weightSum=weights.reduce((a,b)=>a+b,0)||1;
+ $('pColgroup').innerHTML=weights.map(w=>`<col style="width:${(w/weightSum*100).toFixed(2)}%">`).join('');
+ $('pHead').innerHTML=visible.map(c=>`<th style="text-align:center">${escapeHtml(c.label)}</th>`).join('');
+ $('pRows').innerHTML='';
+ data.forEach((x,i)=>{
+   const tr=document.createElement('tr');
+   tr.innerHTML=visible.map(c=>{
+     let v='';
+     if(c.id==='no')v=i+1;
+     else if(c.id==='nama')v=escapeHtml(x.nama);
+     else if(c.id==='qty')v=escapeHtml(x.qty);
+     else if(c.id==='unit')v=escapeHtml(x.unit);
+     else if(c.id==='price')v=fmt(x.price);
+     else if(c.id==='total')v=fmt((Number(x.qty)||0)*(Number(x.price)||0));
+     else v=escapeHtml(x.extra?.[c.id]??'');
+     const align=c.align||((c.id==='no'||c.id==='qty'||c.id==='unit')?'center':((c.id==='price'||c.id==='total')?'right':'left'));
+     return `<td style="text-align:${align}">${v}</td>`;
+   }).join('');
+   $('pRows').appendChild(tr);
+ });
+ const foot=$('pFoot');foot.innerHTML='';
+ const summary=totals();
+ const summaryRows=[
+   {label:'Harga',value:summary.subtotal},
+   {label:'Diskon',value:summary.discount},
+   {label:'Total Harga',value:summary.final}
+ ];
+ summaryRows.forEach((entry,index)=>{
+   const tr=document.createElement('tr');tr.className='grand';
+   const labelCell=document.createElement('td');labelCell.className='grand-label';
+   labelCell.colSpan=Math.max(1,visible.length-1);
+   labelCell.textContent=entry.label;
+   const valueCell=document.createElement('td');valueCell.className='grand-value';
+   valueCell.textContent=index===1?'- '+fmt(entry.value):fmt(entry.value);
+   if(visible.length===1){labelCell.textContent=entry.label+' : '+valueCell.textContent;foot.appendChild(tr);tr.appendChild(labelCell);}
+   else{foot.appendChild(tr);tr.append(labelCell,valueCell);}
+ });
+ 
 }
-function refresh(){renderInputs();updatePreview();}
+function refresh(){renderColumnTools();renderInputs();updatePreview();}
 function updateItemRow(i){
-  const row = $('items').children[i];
-  if(!row) return;
-  const item = data[i];
-  const totalField = row.querySelector('input[readonly]');
-  if(totalField) totalField.value = fmt((Number(item.qty)||0)*(Number(item.price)||0));
+ const row=$('items').children[i];if(!row)return;
+ const item=data[i];const totalField=row.querySelector('input[readonly]');
+ if(totalField)totalField.value=fmt((Number(item.qty)||0)*(Number(item.price)||0));
 }
 $('items').addEventListener('input',e=>{
   const el=e.target;
   if(el.dataset.i===undefined) return;
   const i=Number(el.dataset.i);
-  data[i][el.dataset.k]=el.value;
+  if(el.dataset.extra){data[i].extra=data[i].extra||{};data[i].extra[el.dataset.extra]=el.value;}else if(el.dataset.k){data[i][el.dataset.k]=el.value;}
   updateItemRow(i);
   updatePreview();
 });
@@ -190,7 +275,7 @@ $('items').addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset.i===undefined) return;
   const i=Number(el.dataset.i);
-  data[i][el.dataset.k]=el.value;
+  if(el.dataset.extra){data[i].extra=data[i].extra||{};data[i].extra[el.dataset.extra]=el.value;}else if(el.dataset.k){data[i][el.dataset.k]=el.value;}
   updateItemRow(i);
   updatePreview();
 });
@@ -198,6 +283,23 @@ $('items').addEventListener('click',e=>{
   const b=e.target.closest('[data-remove]');if(!b)return;
   data.splice(Number(b.dataset.remove),1);refresh();
 });
+$('columnTools').addEventListener('input',e=>{
+ const id=e.target.dataset.colLabel;
+ if(id){const c=columns.find(x=>x.id===id);if(c){c.label=e.target.value;updatePreview();}}
+ const wid=e.target.dataset.colWidth;
+ if(wid){const c=columns.find(x=>x.id===wid);if(c){c.width=Math.max(3,Math.min(70,Number(e.target.value)||12));updatePreview();}}
+});
+$('columnTools').addEventListener('change',e=>{
+ const alignId=e.target.dataset.colAlign;
+ if(alignId){const c=columns.find(x=>x.id===alignId);if(c){c.align=e.target.value;updatePreview();}return;}
+ const id=e.target.dataset.colKind;if(!id)return;const c=columns.find(x=>x.id===id);if(c)c.kind=e.target.value;renderInputs();
+});
+$('columnTools').addEventListener('click',e=>{
+ const del=e.target.closest('[data-delcol]');if(del){const id=del.dataset.delcol;columns=columns.filter(c=>c.id!==id);data.forEach(x=>{if(x.extra)delete x.extra[id];});refresh();return;}
+ const up=e.target.closest('[data-up]');const down=e.target.closest('[data-down]');
+ if(up||down){const i=Number((up||down).dataset[up?'up':'down']);const j=i+(up?-1:1);if(j>=0&&j<columns.length){[columns[i],columns[j]]=[columns[j],columns[i]];refresh();}}
+});
+$('addColumn').onclick=()=>{const id='custom'+(nextColumnId++);columns.splice(Math.max(1,columns.length-1),0,{id,label:'Kolom Baru',kind:'text'});data.forEach(x=>{x.extra=x.extra||{};x.extra[id]='';});refresh();};
 $('add').onclick=()=>{data.push({nama:'',qty:'1',unit:'pcs',price:''});refresh();};
 $('clear').onclick=()=>{data=[];refresh();};
 $('sample').onclick=()=>{data=[
@@ -210,10 +312,17 @@ $('sample').onclick=()=>{data=[
 {nama:'Mic Adzan',qty:'1',unit:'pcs',price:'400000'},
 {nama:'Mic Podium',qty:'1',unit:'pcs',price:'500000'},
 {nama:'Mic Wireless PJH',qty:'1',unit:'pcs',price:'1250000'},
-{nama:'Pasang + Transport',qty:'1',unit:'paket',price:'4400000'}];$('override').value='28000000';$('discount').value='0';refresh();};
-['date','customer','discount','override'].forEach(id=>$(id).addEventListener('input',updatePreview));
-$('save').onclick=()=>{try{localStorage.setItem('ilhamAudioQuote',JSON.stringify({data,date:$('date').value,customer:$('customer').value,discount:$('discount').value,override:$('override').value}));$('status').textContent='Data tersimpan di browser perangkat ini.';}catch(e){$('status').textContent='Tidak bisa menyimpan data di browser ini.';}};
-$('load').onclick=()=>{try{const s=JSON.parse(localStorage.getItem('ilhamAudioQuote'));if(!s){$('status').textContent='Belum ada data tersimpan.';return;}data=s.data||[];$('date').value=s.date||'';$('customer').value=s.customer||'Pelanggan Umum';$('discount').value=s.discount||'0';$('override').value=s.override||'';refresh();$('status').textContent='Data tersimpan berhasil dimuat.';}catch(e){$('status').textContent='Gagal memuat data tersimpan.';}};
+{nama:'Pasang + Transport',qty:'1',unit:'paket',price:'4400000'}];data.forEach(x=>x.extra=x.extra||{});$('override').value='28000000';$('discount').value='0';refresh();};
+['date','customer','brandName','npwp','bankDetail','accountName','discount','override','grandLabel','grandAlign'].forEach(id=>$(id).addEventListener('input',updatePreview));
+function applyGridSettings(){
+ $('letter').style.setProperty('--grid-color',$('gridColor').value);
+ $('letter').style.setProperty('--grid-width',$('gridWidth').value+'px');
+ $('letter').style.setProperty('--grid-style',$('gridStyle').value);
+ updatePreview();
+}
+['gridColor','gridWidth','gridStyle'].forEach(id=>$(id).addEventListener('input',applyGridSettings));
+$('save').onclick=()=>{try{localStorage.setItem('ilhamAudioQuote',JSON.stringify({data,columns,date:$('date').value,customer:$('customer').value,brandName:$('brandName').value,npwp:$('npwp').value,bankDetail:$('bankDetail').value,accountName:$('accountName').value,discount:$('discount').value,override:$('override').value,gridColor:$('gridColor').value,gridWidth:$('gridWidth').value,gridStyle:$('gridStyle').value,grandLabel:$('grandLabel').value,grandAlign:$('grandAlign').value}));$('status').textContent='Data tersimpan di browser perangkat ini.';}catch(e){$('status').textContent='Tidak bisa menyimpan data di browser ini.';}};
+$('load').onclick=()=>{try{const s=JSON.parse(localStorage.getItem('ilhamAudioQuote'));if(!s){$('status').textContent='Belum ada data tersimpan.';return;}data=s.data||[];if(s.columns?.length)columns=s.columns;data.forEach(x=>x.extra=x.extra||{});$('date').value=s.date||'';$('customer').value=s.customer||'Pelanggan Umum';$('brandName').value=s.brandName||'ILHAM AUDIO';$('npwp').value=s.npwp||'';$('bankDetail').value=s.bankDetail||'BCA 2430181711';$('accountName').value=s.accountName||'ILHAM NUR HIDAYATULLOH';$('discount').value=s.discount||'0';$('override').value=s.override||'';$('gridColor').value=s.gridColor||'#8e969f';$('gridWidth').value=s.gridWidth||'1';$('gridStyle').value=s.gridStyle||'solid';$('grandLabel').value=s.grandLabel||'Total Harga';$('grandAlign').value=s.grandAlign||'right';applyGridSettings();refresh();$('status').textContent='Data tersimpan berhasil dimuat.';}catch(e){$('status').textContent='Gagal memuat data tersimpan.';}};
 $('export').onclick=async()=>{
  const btn=$('export');btn.disabled=true;btn.textContent='Menyiapkan PNG…';
  try{
@@ -229,6 +338,7 @@ $('export').onclick=async()=>{
  }catch(e){$('status').textContent=e.message||'Ekspor PNG gagal.';}
  finally{btn.disabled=false;btn.textContent='Unduh surat sebagai PNG';}
 };
+applyGridSettings();
 refresh();
 </script>
 <script>
