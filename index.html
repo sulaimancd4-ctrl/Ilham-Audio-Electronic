@@ -113,6 +113,14 @@ button.danger{background:#fff;color:#8b1111;border-color:#c99}
       <button class="secondary" id="save">Simpan data di perangkat</button>
       <button class="secondary" id="load">Muat data tersimpan</button>
     </div>
+    <div class="actions">
+      <button type="button" id="saveHistory">Simpan nota ke riwayat</button>
+    </div>
+    <section style="margin-top:16px;border-top:1px solid #ddd;padding-top:14px">
+      <h3 style="font-size:16px;margin:0 0 8px">Riwayat nota</h3>
+      <p class="small">Nota yang disimpan di sini bisa dibuka kembali atau dihapus. Riwayat tersimpan di browser perangkat ini.</p>
+      <div id="historyList" class="items"></div>
+    </section>
     <div id="status" role="status"></div>
   </section>
 
@@ -338,8 +346,121 @@ $('export').onclick=async()=>{
  }catch(e){$('status').textContent=e.message||'Ekspor PNG gagal.';}
  finally{btn.disabled=false;btn.textContent='Unduh surat sebagai PNG';}
 };
+const HISTORY_KEY = 'ilhamAudioQuoteHistory';
+
+function currentQuoteSnapshot(){
+  return {
+    data: JSON.parse(JSON.stringify(data)),
+    columns: JSON.parse(JSON.stringify(columns)),
+    date:$('date').value,
+    customer:$('customer').value,
+    brandName:$('brandName').value,
+    npwp:$('npwp').value,
+    bankDetail:$('bankDetail').value,
+    accountName:$('accountName').value,
+    discount:$('discount').value,
+    override:$('override').value,
+    gridColor:$('gridColor').value,
+    gridWidth:$('gridWidth').value,
+    gridStyle:$('gridStyle').value,
+    grandLabel:$('grandLabel').value,
+    grandAlign:$('grandAlign').value
+  };
+}
+function readHistory(){
+  try{
+    const value=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');
+    return Array.isArray(value)?value:[];
+  }catch(e){return [];}
+}
+function renderHistory(){
+  const list=$('historyList');
+  if(!list)return;
+  const history=readHistory();
+  list.innerHTML='';
+  if(!history.length){
+    list.innerHTML='<p class="small">Belum ada nota di riwayat.</p>';
+    return;
+  }
+  history.forEach((entry,index)=>{
+    const card=document.createElement('div');
+    card.className='item';
+    const title=escapeHtml(entry.customer||'Pelanggan Umum');
+    const date=escapeHtml(formatDate(entry.date)||'Tanpa tanggal');
+    const amount=fmt(entry.finalTotal);
+    card.innerHTML=`
+      <div class="itemtop">
+        <span>${title}</span>
+        <span class="small">${date}</span>
+      </div>
+      <div class="small">Total: <b>${amount}</b> · ${(entry.data||[]).length} barang</div>
+      <div class="actions">
+        <button type="button" class="secondary" data-open-history="${index}">Buka nota</button>
+        <button type="button" class="danger" data-delete-history="${index}">Hapus</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+function saveQuoteToHistory(){
+  const snapshot=currentQuoteSnapshot();
+  const summary=totals();
+  const history=readHistory();
+  history.unshift({
+    id:Date.now(),
+    savedAt:new Date().toISOString(),
+    ...snapshot,
+    finalTotal:summary.final
+  });
+  // Batasi jumlah riwayat agar penyimpanan browser tidak cepat penuh.
+  try{
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(history.slice(0,100)));
+    renderHistory();
+    $('status').textContent='Nota berhasil disimpan ke riwayat.';
+  }catch(e){
+    $('status').textContent='Riwayat gagal disimpan. Penyimpanan browser mungkin penuh.';
+  }
+}
+function openHistoryEntry(index){
+  const entry=readHistory()[index];
+  if(!entry)return;
+  data=Array.isArray(entry.data)?entry.data:[];
+  if(Array.isArray(entry.columns)&&entry.columns.length)columns=entry.columns;
+  data.forEach(x=>x.extra=x.extra||{});
+  $('date').value=entry.date||'';
+  $('customer').value=entry.customer||'Pelanggan Umum';
+  $('brandName').value=entry.brandName||'ILHAM AUDIO';
+  $('npwp').value=entry.npwp||'';
+  $('bankDetail').value=entry.bankDetail||'BCA 2430181711';
+  $('accountName').value=entry.accountName||'ILHAM NUR HIDAYATULLOH';
+  $('discount').value=entry.discount||'0';
+  $('override').value=entry.override||'';
+  $('gridColor').value=entry.gridColor||'#8e969f';
+  $('gridWidth').value=entry.gridWidth||'1';
+  $('gridStyle').value=entry.gridStyle||'solid';
+  $('grandLabel').value=entry.grandLabel||'Total Harga';
+  $('grandAlign').value=entry.grandAlign||'right';
+  applyGridSettings();
+  refresh();
+  $('status').textContent='Nota dari riwayat berhasil dibuka. Perubahan belum disimpan sampai kamu menyimpannya lagi.';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('saveHistory').addEventListener('click',saveQuoteToHistory);
+$('historyList').addEventListener('click',e=>{
+  const open=e.target.closest('[data-open-history]');
+  const del=e.target.closest('[data-delete-history]');
+  if(open){openHistoryEntry(Number(open.dataset.openHistory));return;}
+  if(del){
+    const index=Number(del.dataset.deleteHistory);
+    const history=readHistory();
+    history.splice(index,1);
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(history));
+    renderHistory();
+    $('status').textContent='Nota dihapus dari riwayat.';
+  }
+});
 applyGridSettings();
 refresh();
+renderHistory();
 </script>
 <script>
 if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }
